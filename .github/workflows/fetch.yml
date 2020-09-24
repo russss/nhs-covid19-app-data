@@ -1,0 +1,38 @@
+name: Build and Deploy
+on:
+  push:
+  schedule:
+    - cron: '*/60 * * * *'
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+      - name: Install Dependencies
+        run: |
+          pip install -r ./requirements.txt
+      - name: Fetch
+        run: |
+          python ./fetch.py
+      - name: Deploy
+        uses: EndBug/add-and-commit@v4
+        with:
+          add: 'nhs_covid19_app_data.db'
+          author_name: 'nhs_covid19_app_data'
+          author_email: 'russ+covid_app_data@garrett.co.uk'
+          message: 'Update DB'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
