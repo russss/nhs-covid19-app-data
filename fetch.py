@@ -131,7 +131,7 @@ timestamp = get_timestamp()
 log.info("Fetching keys from timestamp %s...", timestamp)
 
 while timestamp < arrow.utcnow().shift(hours=-2):
-    if timestamp < arrow.utcnow().replace(hour=0, minute=0, second=0, microsecond=0):
+    if timestamp < arrow.utcnow().shift(days=-1):
         data = get_daily_file(timestamp)
         save_timestamp(timestamp.shift(days=1))
     else:
