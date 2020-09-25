@@ -21,7 +21,10 @@ def fetch_exposure_data(path):
 
 
 def get_daily_file(timestamp):
-    path = "/distribution/daily/" + timestamp.strftime("%Y%m%d00.zip")
+    # NOTE: the timestamp for the file covering day n is actually
+    # midnight on day n+1. So we shift this timestamp forward a day so as
+    # not to confuse me
+    path = "/distribution/daily/" + timestamp.shift(days=1).strftime("%Y%m%d00.zip")
     return fetch_exposure_data(path)
 
 
