@@ -29,6 +29,7 @@ def init_db():
     )
 
     c.execute("""CREATE TABLE IF NOT EXISTS risky_venues (
+                    export_date INTEGER,
                     id TEXT NOT NULL,
                     risky_from INTEGER,
                     risky_until INTEGER,
@@ -93,9 +94,10 @@ def insert_risky_venue(venue):
     if c.fetchone():
         return
 
-    c.execute("""INSERT INTO risky_venues (id, risky_from, risky_until, message_type)
+    c.execute("""INSERT INTO risky_venues (export_date, id, risky_from, risky_until, message_type)
                     VALUES (?, ?, ?, ?)""",
-              (venue['id'],
+              (arrow.utcnow().timestamp,
+               venue['id'],
                risky_from,
                risky_until,
                venue['messageType']
