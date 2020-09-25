@@ -92,7 +92,7 @@ def insert_risky_venue(venue):
               (venue['id'], risky_from))
 
     if c.fetchone():
-        return
+        return False
 
     c.execute("""INSERT INTO risky_venues (export_date, id, risky_from, risky_until, message_type)
                     VALUES (?, ?, ?, ?, ?)""",
@@ -102,6 +102,7 @@ def insert_risky_venue(venue):
                risky_until,
                venue['messageType']
               ))
+    return True
 
 
 def fetch_exposure_data(path):
@@ -127,6 +128,7 @@ def get_two_hourly_file(timestamp):
 
 
 timestamp = get_timestamp()
+log.info("Fetching keys from timestamp %s...", timestamp)
 
 while timestamp < arrow.utcnow().shift(hours=-2):
     if timestamp < arrow.utcnow().replace(hour=0, minute=0, second=0, microsecond=0):
@@ -140,15 +142,24 @@ while timestamp < arrow.utcnow().shift(hours=-2):
     conn.commit()
     timestamp = get_timestamp()
 
+log.info("Fetched keys to timestamp %s", timestamp)
 
 def get_risky_venues():
+    log.info("Fetching venues...")
     res = requests.get(ENDPOINT + '/distribution/risky-venues')
     res.raise_for_status()
     data = res.json()
 
+    seen = new = 0
     for venue in data['venues']:
-        insert_risky_venue(venue)
+        seen += 1
+        if insert_risky_venue(venue):
+            new += 1
 
     conn.commit()
 
+    log.info("Saw %s venues, %s new.", seen, new)
+
 get_risky_venues()
+
+log.info("Run finished")
