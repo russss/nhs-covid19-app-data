@@ -95,7 +95,7 @@ def insert_risky_venue(venue):
         return
 
     c.execute("""INSERT INTO risky_venues (export_date, id, risky_from, risky_until, message_type)
-                    VALUES (?, ?, ?, ?)""",
+                    VALUES (?, ?, ?, ?, ?)""",
               (arrow.utcnow().timestamp,
                venue['id'],
                risky_from,
