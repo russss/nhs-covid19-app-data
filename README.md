@@ -22,3 +22,11 @@ the `end_timestamp` of the key export in which that key was seen.
 ### risky_venues
 
 This contains the data from the [risky-venues endpoint](https://distribution-te-prod.prod.svc-test-trace.nhs.uk/distribution/risky-venues) which lists venue IDs where exposure could have taken place. This is used by the QR code checkin system.
+
+### exposure_configuration
+
+This table contains the exposure configuration JSON file fetched from [this endpoint](https://distribution-te-prod.prod.svc-test-trace.nhs.uk/distribution/exposure-configuration), with a new record inserted whenever this changes.
+
+This file is also available in the [public git repository](https://github.com/nihp-public/covid19-app-system-public/blob/master/src/static/exposure-configuration.json), however this is a mirror and may not be updated immediately when the configuration changes.
+
+For changes dated before 2021-07-11, the data in the table has been backfilled using data from the git repository, and so the timestamp will be approximate.
