@@ -1,4 +1,3 @@
-import sys
 import sqlite3
 import arrow
 import requests
@@ -25,13 +24,22 @@ def init_db():
                 )"""
     )
 
-    c.execute("""CREATE TABLE IF NOT EXISTS risky_venues (
+    c.execute(
+        """CREATE TABLE IF NOT EXISTS risky_venues (
                     export_date INTEGER,
                     id TEXT NOT NULL,
                     risky_from INTEGER,
                     risky_until INTEGER,
                     message_type TEXT
-              )""")
+              )"""
+    )
+
+    c.execute(
+        """CREATE TABLE IF NOT EXISTS exposure_configuration (
+                    date INTEGER,
+                    configuration TEXT NOT NULL
+              )"""
+    )
 
     c.execute("""CREATE TABLE IF NOT EXISTS last_update (end_timestamp INTEGER)""")
 
@@ -83,22 +91,27 @@ def insert_exposure_data(export):
 
 
 def insert_risky_venue(venue):
-    risky_from = arrow.get(venue['riskyWindow']['from']).timestamp
-    risky_until = arrow.get(venue['riskyWindow']['until']).timestamp
-    c.execute("SELECT 1 FROM risky_venues WHERE id = ? AND risky_from = ?",
-              (venue['id'], risky_from))
+    risky_from = arrow.get(venue["riskyWindow"]["from"]).timestamp
+    risky_until = arrow.get(venue["riskyWindow"]["until"]).timestamp
+    c.execute(
+        "SELECT 1 FROM risky_venues WHERE id = ? AND risky_from = ?",
+        (venue["id"], risky_from),
+    )
 
     if c.fetchone():
         return False
 
-    c.execute("""INSERT INTO risky_venues (export_date, id, risky_from, risky_until, message_type)
+    c.execute(
+        """INSERT INTO risky_venues (export_date, id, risky_from, risky_until, message_type)
                     VALUES (?, ?, ?, ?, ?)""",
-              (arrow.utcnow().timestamp,
-               venue['id'],
-               risky_from,
-               risky_until,
-               venue['messageType']
-              ))
+        (
+            arrow.utcnow().timestamp,
+            venue["id"],
+            risky_from,
+            risky_until,
+            venue["messageType"],
+        ),
+    )
     return True
 
 
@@ -119,10 +132,11 @@ while timestamp < arrow.utcnow().shift(hours=-2):
 
 log.info("Fetched keys to timestamp %s", timestamp)
 
+
 def import_risky_venues():
     data = get_risky_venues()
     seen = new = 0
-    for venue in data['venues']:
+    for venue in data["venues"]:
         seen += 1
         if insert_risky_venue(venue):
             new += 1
@@ -131,6 +145,26 @@ def import_risky_venues():
 
     log.info("Saw %s venues, %s new.", seen, new)
 
+
 import_risky_venues()
+
+
+def import_exposure_configuration():
+    url = "https://distribution-te-prod.prod.svc-test-trace.nhs.uk/distribution/exposure-configuration"
+    config = requests.get(url).text
+
+    c.execute("SELECT configuration FROM exposure_configuration ORDER BY date DESC LIMIT 1")
+    res = c.fetchone()
+    if res and res[0] == config:
+        return
+
+    c.execute("INSERT INTO exposure_configuration (date, configuration) VALUES (?, ?)",
+              (arrow.now().timestamp, config))
+
+    conn.commit()
+    log.info("Inserted updated exposure configuration")
+
+
+import_exposure_configuration()
 
 log.info("Run finished")
