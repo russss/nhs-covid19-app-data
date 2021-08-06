@@ -6,6 +6,8 @@ on the exposure notification system.
 
 The collected data was previously stored in this repository but it's now located [here](https://files.russss.dev/nhs_covid19_app_data.db) as it has exceeded GitHub's file size limit.
 
+**Data note:** due to this issue, some "risky venue" data is missing between Aug 3-6 2021. 
+
 This data powers the [app stats page on my Covid Tracker site](https://russss.github.io/covidtracker/app.html).
 
 ## Data Format
