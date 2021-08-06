@@ -1,8 +1,10 @@
 # NHS COVID-19 App Data
 
-This repo contains a SQLite database which is regularly updated with data fetched from the API
+This repo contains tools to regularly update an SQLite database with data fetched from the API
 of the [NHS COVID-19 App](https://covid19.nhs.uk/). It should be useful for calculating statistics
 on the exposure notification system.
+
+The collected data was previously stored in this repository but it's now located [here](https://files.russss.dev/nhs_covid19_app_data.db) as it has exceeded GitHub's file size limit.
 
 This data powers the [app stats page on my Covid Tracker site](https://russss.github.io/covidtracker/app.html).
 
