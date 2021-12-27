@@ -1,8 +1,7 @@
-# NHS COVID-19 App Data
+# NHS COVID-19 Data
 
 This repo contains tools to regularly update an SQLite database with data fetched from the API
-of the [NHS COVID-19 App](https://covid19.nhs.uk/). It should be useful for calculating statistics
-on the exposure notification system.
+of the [NHS COVID-19 App](https://covid19.nhs.uk/), and NHS testing availability.
 
 The collected data was previously stored in this repository but it's now located [here](https://files.russss.dev/nhs_covid19_app_data.db) as it has exceeded GitHub's file size limit.
 
@@ -12,7 +11,7 @@ This data powers the [app stats page on my Covid Tracker site](https://russss.gi
 
 ## Data Format
 
-The database consists of two tables:
+The database consists of the following tables:
 
 ### exposure_keys
 
@@ -34,3 +33,16 @@ This table contains the exposure configuration JSON file fetched from [this endp
 This file is also available in the [public git repository](https://github.com/nihp-public/covid19-app-system-public/blob/master/src/static/exposure-configuration.json), however this is a mirror and may not be updated immediately when the configuration changes.
 
 For changes dated before 2021-07-11, the data in the table has been backfilled using data from the git repository, and so the timestamp will be approximate.
+
+### walk_in_pcr_availability
+
+Start date: 2021-12-27
+
+Walk-in PCR test availability across the UK, in the JSON format returned by the website. This table
+is only updated when the JSON data substantively changes.
+
+### home_test_availability
+
+Start date: 2021-12-27
+
+Home test ordering availability, for PCR and LFD tests.
