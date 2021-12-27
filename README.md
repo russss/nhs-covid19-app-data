@@ -3,9 +3,7 @@
 This repo contains tools to regularly update an SQLite database with data fetched from the API
 of the [NHS COVID-19 App](https://covid19.nhs.uk/), and NHS testing availability.
 
-The collected data was previously stored in this repository but it's now located [here](https://files.russss.dev/nhs_covid19_app_data.db) as it has exceeded GitHub's file size limit.
-
-**Data note:** due to this issue, some "risky venue" data is missing between Aug 3-6 2021. 
+**The collected data can be downloaded [here](https://files.russss.dev/nhs_covid19_app_data.db)**
 
 This data powers the [app stats page on my Covid Tracker site](https://russss.github.io/covidtracker/app.html).
 
@@ -25,6 +23,8 @@ the `end_timestamp` of the key export in which that key was seen.
 ### risky_venues
 
 This contains the data from the [risky-venues endpoint](https://distribution-te-prod.prod.svc-test-trace.nhs.uk/distribution/risky-venues) which lists venue IDs where exposure could have taken place. This is used by the QR code checkin system.
+
+**Data note:** Some "risky venue" data is missing between Aug 3-6 2021. 
 
 ### exposure_configuration
 
