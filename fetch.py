@@ -207,7 +207,7 @@ def import_test_availability():
         log.info("Inserting updated walk-in PCR availability")
         c.execute(
             "INSERT INTO walk_in_pcr_availability (date, availability) VALUES (?, ?)",
-            (arrow.now().timestamp, walk_in),
+            (arrow.now().timestamp, json.dumps(walk_in)),
         )
         conn.commit()
 
