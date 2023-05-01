@@ -3,9 +3,13 @@
 This repo contains tools to regularly update an SQLite database with data fetched from the API
 of the [NHS COVID-19 App](https://covid19.nhs.uk/), and NHS testing availability.
 
-**The collected data can be downloaded [here](https://files.russss.dev/nhs_covid19_app_data.db)**
+**After the retirement of the COVID-19 App and testing services, the final version of the data
+collected by this scraper is [available here](https://doi.org/10.5281/zenodo.7879427).**
 
-This data powers the [app stats page on my Covid Tracker site](https://russss.github.io/covidtracker/app.html).
+An archived version of the final version of this source code is available at
+https://doi.org/10.5281/zenodo.7883754.
+
+This data powered the [app stats page on my Covid Tracker site](https://russss.github.io/covidtracker/app.html).
 
 ## Data Format
 
